@@ -2,6 +2,9 @@ package com.zph.androiddelay;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -119,4 +122,46 @@ class JsonOperation {
         mact.log_d("final data: " + data_jsn.toString());
         editor.putString(mSPTag, data_jsn.toString()).apply();
     }
+
+    void dataPut() {
+        SharedPreferences sp = mact.getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        String _data = sp.getString(mSPTag, "no");
+        mact.log_d("dataPut(): " + _data);
+
+        JSONObject data_jsn;
+        JSONObject _orders = new JSONObject();
+        JSONObject _order = new JSONObject();
+        try {
+            data_jsn = new JSONObject(_data);
+
+            JSONObject temp1 = data_jsn.getJSONObject(mSPTag);
+            for(int i = 0; i < temp1.names().length(); i++) {
+                Object name = temp1.names().get(i);
+                mact.log_d(name.toString() + ": " + temp1.getString(name.toString()));
+                JSONObject temp2 = temp1.getJSONObject(name.toString());
+
+                _order.put("packageName", temp2.getString("packageName"));
+                _order.put("productId", temp2.getString("productId"));
+                _order.put("token", temp2.getString("token"));
+                _orders.put(name.toString(), _order);
+            }
+
+            _order.put("packageName", "newName");
+            _order.put("productId", "newID");
+            _order.put("token", "newToken");
+            _orders.put("sg911", _order);
+
+            data_jsn.put(mSPTag, _orders);
+        } catch (Exception e) {
+            mact.log_e("dataPut(): " + e.toString());
+            return;
+        }
+
+        mact.log_d("final data: " + data_jsn.toString());
+        editor.putString(mSPTag, data_jsn.toString()).apply();
+    }
+
+
 }

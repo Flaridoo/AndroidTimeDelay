@@ -10,11 +10,13 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView mTime;
 
+    public HandlerThreads myHandlerThreads;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         mHandler = new Handler();
         //delays();
+
+        myHandlerThreads = new HandlerThreads(this);
+
     }
 
     void setBtns() {
@@ -55,21 +62,24 @@ public class MainActivity extends AppCompatActivity {
 
                 //VerifyResultForServer();
 
-                jsonOperation.dataSave();
+                //jsonOperation.dataSave();
+
+                myHandlerThreads.VerifyResultForServer("","","","");
             }
         });
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                jsonOperation.dataGet();
+                //jsonOperation.dataGet();
             }
         });
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                jsonOperation.dataRemove();
+                //jsonOperation.dataRemove();
+                //jsonOperation.dataPut();
             }
         });
     }
@@ -151,9 +161,15 @@ public class MainActivity extends AppCompatActivity {
     }
     private void toVerifyResultForServer(final Handler handler) {
 
-        //final String mCheckUrl = "http://112.124.201.87:10003/v1/sdk/check/googlecheck";
-        final String mCheckUrl = "http://www.appsflyer.com?apps=\"aap\"";
-         Runnable runnable = new Runnable() {
+        final String mCheckUrl = "http://1112.124.201.87:10003/v1/sdk/check/googlecheck";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+        new Thread(new Runnable() {
+
             @Override
             public void run() {
                 Message msg = new Message();
@@ -182,9 +198,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 handler.sendMessage(msg);
             }
-        };
-        new Thread(runnable).start();
+        }).start();
     }
+
 
 
     //加载框
@@ -215,6 +231,12 @@ public class MainActivity extends AppCompatActivity {
         Log.e("zph", "log--> " + msg);
     }
     void loading(boolean isLoading) {
-        log_e(isLoading + " ");
+        log_e("isLoading: " + isLoading);
+    }
+    void toasts(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+    void toasts2(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }

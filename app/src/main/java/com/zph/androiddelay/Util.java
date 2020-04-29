@@ -15,7 +15,7 @@ public class Util {
     {
         URL url = new URL(route);
         HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-        httpURLConnection.setConnectTimeout(10000);
+        httpURLConnection.setConnectTimeout(1);
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setDoInput(true);
         httpURLConnection.setDoOutput(true);
